@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FacelauncherInstance</title>
+  <%= stylesheet_link_tag    "facelauncher_instance/application", :media => "all" %>
+  <%= javascript_include_tag "facelauncher_instance/application" %>
+
+  <%= render "facelauncher_instance/application/facebook_init" -%>
+
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

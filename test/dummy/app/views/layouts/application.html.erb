@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dummy</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+
+  <%= render "facelauncher_instance/application/facebook_init" -%>
+
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <textarea>
+<%= @program.to_yaml %>
+  </textarea>
+<%= yield %>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+essential:
+  program_id: 1
+  program_access_key: "0625e21b0495c2eee75effbdf2016dc6"
+  email: john_doe@test.com
+  ip_address: "127.0.0.1"
+
+full:
+  program_id: 1
+  program_access_key: "0625e21b0495c2eee75effbdf2016dc6"
+  email: john_doe@test.com
+  ip_address: "127.0.0.1"
+  first_name: John
+  last_name: Doe
+  address1: 40 West 23rd Street
+  address2: 5th Floor
+  city: New York
+  state: NY
+  zip: "10010"
+  facebook_user_id: "100003808405975"
+
+missing_program_id:
+  program_access_key: "0625e21b0495c2eee75effbdf2016dc6"
+  email: john_doe@test.com
+  ip_address: "127.0.0.1"
