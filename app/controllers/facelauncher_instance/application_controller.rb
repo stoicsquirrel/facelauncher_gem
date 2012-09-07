@@ -14,6 +14,16 @@ module FacelauncherInstance
     def get_program
       begin
         @program = FacelauncherInstance::Program.find(FacelauncherInstance.program_id)
+        @photos = FacelauncherInstance::Photo.all
+        if !Cloudinary.nil?
+          @cl_photo_names = Array.new
+          @photos.each do |photo|
+            matches = /[^\/\s]+.(jpg|jpeg|png|gif)$/.match(photo.file.url)
+            if !matches.nil?
+              @cl_photo_names << matches[0]
+            end
+          end
+        end
       rescue ActiveResource::ResourceNotFound
         raise ActionController::RoutingError.new('Not Found')
       # rescue

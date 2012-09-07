@@ -11,7 +11,7 @@
 db/*.sqlite3
 
 # Ignore migrations.
-db/migrate/
+# db/migrate/
 
 # Ignore all logfiles and tempfiles.
 log/*.log
@@ -23,8 +23,8 @@ tmp/
 # Ignore Bundler artifacts.
 pkg/
 
-# Uncomment to ignore dummy application.
-# test/dummy/db/*.sqlite3
-# test/dummy/log/*.log
-# test/dummy/tmp/
-# test/dummy/.sass-cache
+# Dummy application tmp files.
+test/dummy/db/*.sqlite3
+test/dummy/log/*.log
+test/dummy/tmp/
+test/dummy/.sass-cache

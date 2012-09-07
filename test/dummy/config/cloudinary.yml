@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: bigfuel
+  api_key: '617345589269183'
+  api_secret: CeGjpvg_fU28e-FLd9TXelYviwY
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: bigfuel
+  api_key: '617345589269183'
+  api_secret: CeGjpvg_fU28e-FLd9TXelYviwY
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: bigfuel
+  api_key: '617345589269183'
+  api_secret: CeGjpvg_fU28e-FLd9TXelYviwY
+  enhance_image_tag: true
+  static_image_support: false

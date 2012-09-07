@@ -8,7 +8,8 @@
         xfbml: true
       });
       FB.Canvas.setSize();
-      fbInitHook();
+      if (fbInitHook)
+        fbInitHook();
     };
 
     function sizeChangeCallback() {

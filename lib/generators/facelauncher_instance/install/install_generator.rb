@@ -2,24 +2,62 @@ module FacelauncherInstance
   class InstallGenerator < Rails::Generators::Base
     #source_root File.expand_path('../templates', __FILE__)
 
-    def create_initializer_file
-      puts 'Generating initialization file...'
-      program_id = ask "What is the Facelauncher program's ID?"
-      program_access_key = ask "What is the access key for this Facelauncher key?"
+    def create_initializer_files
+      puts "Please answer the following two questions about your app:"
+      program_id = ask "What is ID of this program in Facelauncher?"
+      program_access_key = ask "What is the access key for this Facelauncher program?"
+      has_cloudinary = ask "Are you using Cloudinary?"
+      puts "Generating initialization files..."
       initializer "facelauncher.rb" do
 %{# Be sure to restart your server when you modify this file.
 FacelauncherInstance.setup do |config|
+  # The facelauncher_server_url field specifies the Facelauncher server's location.
+  config.facelauncher_server_url = "http://localhost:5000/"
+
   # The program_id and program_access_key fields are required in order to
   # have access to the Facelauncher API.
   config.program_id = #{program_id}
   config.program_access_key = "#{program_access_key}"
 end
+
 }
       end
 
+      if has_cloudinary
+        initializer "cloudinary.yml" do
+<<-END
+# Replace this with your cloudinary.yml file.
+---
+development:
+  cloud_name:
+  api_key:
+  api_secret:
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name:
+  api_key:
+  api_secret:
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name:
+  api_key:
+  api_secret:
+  enhance_image_tag: true
+  static_image_support: false
+
+END
+        end
+
+        gem("cloudinary", version: "1.0.35")
+      end
+    end
+
+    def create_template_files
       puts 'Generating templates...'
       create_file 'public/503.html' do
-<<-eof
+<<-END
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,13 +77,14 @@ end
 </head>
 
 <body>
-  <!-- This file lives in public/500.html -->
+  <!-- This file lives in public/503.html -->
   <div class="dialog">
     <h1>We're sorry, but the page is currently unavailable.</h1>
   </div>
 </body>
 </html>
-eof
+
+END
       end
     end
   end
