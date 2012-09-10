@@ -14,7 +14,7 @@ module FacelauncherInstance
     def get_program
       begin
         @program = FacelauncherInstance::Program.find(FacelauncherInstance.program_id)
-        @photos = FacelauncherInstance::Photo.all
+        @photos = FacelauncherInstance::Photo.find(:all, params: { program_id: FacelauncherInstance.program_id })
         if !Cloudinary.nil?
           @cl_photo_names = Array.new
           @photos.each do |photo|
