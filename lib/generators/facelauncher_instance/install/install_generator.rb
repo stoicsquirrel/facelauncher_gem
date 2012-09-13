@@ -4,27 +4,26 @@ module FacelauncherInstance
 
     def create_initializer_files
       puts "Please answer the following two questions about your app:"
-      program_id = ask "What is ID of this program in Facelauncher?"
-      program_access_key = ask "What is the access key for this Facelauncher program?"
-      has_cloudinary = ask "Are you using Cloudinary?"
+      program_id = ask "What is ID of this program in Facelauncher?" || 0
+      program_access_key = ask "What is the access key for this Facelauncher program?" || ''
+      has_cloudinary = ask "Are you using Cloudinary? (Y or N)" : 'Y'
       puts "Generating initialization files..."
       initializer "facelauncher.rb" do
 %{# Be sure to restart your server when you modify this file.
-FacelauncherInstance.setup do |config|
-  # The facelauncher_server_url field specifies the Facelauncher server's location.
-  config.facelauncher_server_url = "http://localhost:5000/"
+FacelauncherInstance::Engine.configure do
+  config.server_url = "http://localhost:5000/"
 
   # The program_id and program_access_key fields are required in order to
   # have access to the Facelauncher API.
   config.program_id = #{program_id}
-  config.program_access_key = "#{program_access_key}"
+  config.program_access_key = '#{program_access_key}'
 end
 
 }
       end
 
-      if has_cloudinary
-        initializer "cloudinary.yml" do
+      if has_cloudinary.upcase == 'Y'
+        create_file "config/cloudinary.yml" do
 <<-END
 # Replace this with your cloudinary.yml file.
 ---

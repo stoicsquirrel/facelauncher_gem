@@ -14,11 +14,14 @@
     <%= @program.to_yaml %>
   </textarea>
   <textarea>
+    <%= @photo_albums.to_yaml %>
+  </textarea>
+  <textarea>
     <%= @photos.to_yaml %>
   </textarea>
 
-  <% @cl_photo_names.each do |photo| %>
-    <%= cl_image_tag(photo, crop: :fit, :width => 350, :height => 350) %>
+  <% @photo_albums[0]["photos"].each do |photo| %>
+    <%= cl_image_tag(photo["file"]["filename"], crop: :fit, :width => 350, :height => 350) %>
   <% end %>
 <%= yield %>
 
