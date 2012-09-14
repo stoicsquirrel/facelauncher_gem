@@ -17,8 +17,8 @@ module FacelauncherInstance
         raise ActionController::RoutingError.new('Not Found')
       end
       if @program.active
-        @photo_albums = FacelauncherInstance::PhotoAlbum.all(true) #find(:all, params: { program_id: FacelauncherInstance::Engine.config.program_id })
-        binding.pry
+        # Get photo albums with photos.
+        @photo_albums = FacelauncherInstance::PhotoAlbum.all(true)
 
         # Add the photos and the filenames to the photo_album objects.
         @photo_albums.each do |photo_album|
@@ -27,7 +27,16 @@ module FacelauncherInstance
             photo_album["photos"].each do |photo|
               photo["file"]["filename"] = File.basename(photo["file"]["url"])
             end
+          else
+            photo_album["photos"] = Hash.new
           end
+        end
+
+        # Get video playlists with videos.
+        @video_playlists = FacelauncherInstance::VideoPlaylist.all(true)
+        # Rename the approved_videos field to videos.
+        @video_playlists.each do |video_playlist|
+          video_playlist["videos"] = !video_playlist["approved_videos"].nil? ? video_playlist.delete("approved_videos") : Hash.new
         end
       else
         # If the program is inactive, then render the application's "inactive" template.
