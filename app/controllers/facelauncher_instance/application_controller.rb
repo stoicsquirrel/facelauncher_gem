@@ -20,7 +20,8 @@ module FacelauncherInstance
         # Get photo albums with photos.
         @photo_albums = FacelauncherInstance::PhotoAlbum.all(true)
 
-        # Add the photos and the filenames to the photo_album objects.
+        # Add the photos and the filenames to the photo_album objects and rename approved_photos
+        # to photos.
         @photo_albums.each do |photo_album|
           if !photo_album["approved_photos"].nil?
             photo_album["photos"] = photo_album.delete("approved_photos")
@@ -34,9 +35,13 @@ module FacelauncherInstance
 
         # Get video playlists with videos.
         @video_playlists = FacelauncherInstance::VideoPlaylist.all(true)
-        # Rename the approved_videos field to videos.
-        @video_playlists.each do |video_playlist|
+          # Add the videos and the filenames to the video_playlist objects and rename approved_videos
+          # to videos.
+          @video_playlists.each do |video_playlist|
           video_playlist["videos"] = !video_playlist["approved_videos"].nil? ? video_playlist.delete("approved_videos") : Hash.new
+          video_playlist["videos"].each do |video|
+              video["screenshot"]["filename"] = File.basename(video["screenshot"]["url"])
+            end
         end
       else
         # If the program is inactive, then render the application's "inactive" template.

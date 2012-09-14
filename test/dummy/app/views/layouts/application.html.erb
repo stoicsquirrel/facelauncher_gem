@@ -26,6 +26,7 @@
 
   <% @video_playlists[0]["videos"].each do |video| %>
     <%= video["embed_code"].html_safe %>
+    <%= cl_image_tag(video["screenshot"]["filename"], :width => 200, :height => 175, :crop => :fill) %>
   <% end %>
 <%= yield %>
 
