@@ -1,6 +1,6 @@
 module FacelauncherInstance
   class Signup < ActiveResource::Base
-    self.site = FacelauncherInstance.setup.config.server_url
+    self.site = FacelauncherInstance::Engine.config.server_url
     self.format = :json
 
     schema do
