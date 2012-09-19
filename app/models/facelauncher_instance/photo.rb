@@ -19,18 +19,3 @@ module FacelauncherInstance
     end
   end
 end
-
-
-# module FacelauncherInstance
-#   class Photo < ActiveResource::Base
-#     self.site = FacelauncherInstance::Engine.config.server_url
-#     self.format = :json
-#
-#     schema do
-#       integer :program_id, :photo_album_id, :position
-#       string :file, :title, :from_user_username, :from_user_full_name, :from_user_id,
-#              :from_service, :from_twitter_image_service
-#       text :caption
-#     end
-#   end
-# end

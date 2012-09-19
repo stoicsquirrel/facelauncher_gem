@@ -40,8 +40,8 @@ module FacelauncherInstance
           @video_playlists.each do |video_playlist|
           video_playlist["videos"] = !video_playlist["approved_videos"].nil? ? video_playlist.delete("approved_videos") : Hash.new
           video_playlist["videos"].each do |video|
-              video["screenshot"]["filename"] = File.basename(video["screenshot"]["url"])
-            end
+            video["screenshot"]["filename"] = !video["screenshot"]["url"].nil? ? File.basename(video["screenshot"]["url"]) : ''
+          end
         end
       else
         # If the program is inactive, then render the application's "inactive" template.
