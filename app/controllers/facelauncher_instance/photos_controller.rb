@@ -12,7 +12,7 @@ module FacelauncherInstance
             redirect_to(redirect_path) if !redirect_path.nil?
           else
             photo = Photo.find(params[:id])
-            redirect_to(cl_image_path(File.basename(photo["file"]["url"]))
+            redirect_to(cl_image_path(File.basename(photo["file"]["url"])))
           end
         end
       end
