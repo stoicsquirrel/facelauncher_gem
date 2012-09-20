@@ -1,7 +1,7 @@
 class ApplicationController < FacelauncherInstance::ApplicationController
 
   protected
-  def after_parse_fb_signed_request(app_data)
+  def before_parse_app_data(app_data)
 
   end
 end

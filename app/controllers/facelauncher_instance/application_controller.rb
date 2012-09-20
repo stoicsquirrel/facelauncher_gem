@@ -25,17 +25,13 @@ module FacelauncherInstance
         fb_signed_request = fb_oauth.parse_signed_request(params[:signed_request])
         app_data = fb_signed_request.key?('app_data') ? fb_signed_request['app_data'] : nil
 
-        logger.info "Facebook app data: #{app_data}"
-
         # Call an "event" to allow the app to use the FB app data on its own.
-        anchor = after_parse_fb_signed_request(app_data) if self.respond_to? 'after_parse_fb_signed_request'
+        anchor = before_parse_app_data(app_data) if self.respond_to? 'before_parse_app_data'
         # If the event callback did not return an anchor (or doesn't exist), then do default
         # parsing for photo or video.
         unless anchor.nil?
-          if app_data.key?('photo')
-            anchor = "photos/#{app_data['photo']}"
-          elsif app_data.key?('video')
-            anchor = "videos/#{app_data['video']}"
+          app_data.match(/^(?<type>photo|video)_(?<id>\d+)/) do |match|
+            anchor = "#{match[:type]}s/#{match[:id]}"
           end
         end
       end
