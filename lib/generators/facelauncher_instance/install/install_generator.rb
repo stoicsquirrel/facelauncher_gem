@@ -49,7 +49,8 @@ test:
 END
         end
 
-        gem("cloudinary", version: "1.0.35")
+        gem('cloudinary', version: '1.0.35')
+        gem('koala', version: '1.5.0')
       end
     end
 
