@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 3.2.8"
   s.add_dependency "httparty", "~> 0.9.0"
+#  s.add_dependency "koala", "~> 1.5.0"
 #  s.add_dependency "carrierwave", "~> 0.6.2"
 #  s.add_dependency "cloudinary", "~> 1.0.35"
   # s.add_dependency "jquery-rails"

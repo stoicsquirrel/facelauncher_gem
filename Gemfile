@@ -10,6 +10,7 @@ gem "thin"
 gem "jquery-rails"
 
 gem "cloudinary"
+gem "koala"
 
 gem "pry"
 

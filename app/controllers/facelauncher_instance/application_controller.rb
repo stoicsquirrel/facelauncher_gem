@@ -1,12 +1,41 @@
 module FacelauncherInstance
   class ApplicationController < ActionController::Base
-    protect_from_forgery
+    protect_from_forgery :except => :index
     before_filter :get_program
 
     def index
       respond_to do |format|
+        if request.post?
+          anchor = index_base
+          redirect_to(:root, :anchor => anchor) and return unless anchor.nil?
+        end
+
         format.html
       end
+    end
+
+    def index_base
+      fb_oauth = Koala::Facebook::OAuth.new(@program.facebook_app_id, @program.facebook_app_secret)
+      if params.key? :signed_request
+        fb_signed_request = fb_oauth.parse_signed_request(params[:signed_request])
+        app_data = fb_signed_request.key?('app_data') ? fb_signed_request['app_data'] : nil
+
+        logger.info "Facebook app data: #{app_data}"
+
+        # Call an "event" to allow the app to use the FB app data on its own.
+        anchor = after_parse_fb_signed_request(app_data) if self.respond_to? 'after_parse_fb_signed_request'
+        # If the event callback did not return an anchor (or doesn't exist), then do default
+        # parsing for photo or video.
+        unless anchor.nil?
+          if app_data.key?('photo')
+            anchor = "photos/#{app_data['photo']}"
+          elsif app_data.key?('video')
+            anchor = "videos/#{app_data['video']}"
+          end
+        end
+      end
+
+      return anchor
     end
 
     private

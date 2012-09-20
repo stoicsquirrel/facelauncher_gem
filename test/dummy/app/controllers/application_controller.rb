@@ -1,9 +1,7 @@
 class ApplicationController < FacelauncherInstance::ApplicationController
-  #layout "facelauncher_instance/application"
 
-  def index
-    respond_to do |format|
-      format.html
-    end
+  protected
+  def after_parse_fb_signed_request(app_data)
+
   end
 end
