@@ -1,10 +1,11 @@
 <%-# Include this in the body -%>
 <%- if !@program.nil? and !@program.facebook_app_id.blank? -%>
+  <% facebook_app_id = ENV.key?('FACEBOOK_APP_ID') ? ENV['FACEBOOK_APP_ID'] : @program.facebook_app_id
   <div id="fb-root"></div>
   <script type="text/javascript">
     window.fbAsyncInit = function() {
       FB.init({
-        appId: '<%= @program.facebook_app_id %>',
+        appId: '<%= facebook_app_id %>',
         status: true,
         cookie: true,
         xfbml: true
