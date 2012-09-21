@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    facelauncher_instance (0.2.0)
+    facelauncher_instance (0.2.7.1)
       httparty (~> 0.9.0)
       koala (~> 1.5.0)
       rails (~> 3.2.8)
