@@ -25,6 +25,7 @@ module FacelauncherInstance
       fb_oauth = Koala::Facebook::OAuth.new(facebook_app_id, facebook_app_secret)
       if params.key? :signed_request
         fb_signed_request = fb_oauth.parse_signed_request(params[:signed_request])
+        logger.info "Signed request: #{fb_signed_request}"
         app_data = fb_signed_request.key?('app_data') ? fb_signed_request['app_data'] : nil
 
         logger.info "App data: #{app_data}"
