@@ -26,7 +26,7 @@ module FacelauncherInstance
         app_data = fb_signed_request.key?('app_data') ? fb_signed_request['app_data'] : nil
 
         # Call an "event" to allow the app to use the FB app data on its own.
-        anchor = before_parse_app_data(app_data) if self.respond_to? 'before_parse_app_data' && !app_data.nil?
+        anchor = before_parse_app_data(app_data) if self.respond_to?('before_parse_app_data') && !app_data.nil?
         # If the event callback did not return an anchor (or doesn't exist), then do default
         # parsing for photo or video.
         unless anchor.nil?
