@@ -7,7 +7,11 @@ module FacelauncherInstance
       respond_to do |format|
         if request.post?
           anchor = index_base
-          redirect_to(:root, :anchor => anchor) and return unless anchor.nil?
+          if !anchor.nil?
+            redirect_to(root_url(:anchor => anchor))
+          else
+            redirect_to(root_url)
+          return
         end
 
         format.html
