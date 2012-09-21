@@ -11,6 +11,7 @@ module FacelauncherInstance
             redirect_to(root_url(:anchor => anchor))
           else
             redirect_to(root_url)
+          end
           return
         end
 
@@ -20,8 +21,6 @@ module FacelauncherInstance
 
     def index_base
       anchor = nil
-
-      puts "index_base"
 
       # Use static values stored in ENV, if they're defined.
       # This is useful for testing.
@@ -33,9 +32,6 @@ module FacelauncherInstance
         fb_signed_request = fb_oauth.parse_signed_request(params[:signed_request])
         logger.info "Signed request: #{fb_signed_request}"
         app_data = fb_signed_request.key?('app_data') ? fb_signed_request['app_data'] : nil
-
-        puts "App data: "
-        puts app_data.to_s
 
         # Call an "event" to allow the app to use the FB app data on its own.
         anchor = before_parse_app_data(app_data) if self.respond_to?('before_parse_app_data') && !app_data.nil?
