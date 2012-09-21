@@ -15,6 +15,8 @@ module FacelauncherInstance
     end
 
     def index_base
+      anchor = nil
+
       # Use static values stored in ENV, if they're defined.
       # This is useful for testing.
       facebook_app_id = ENV.key?('FACEBOOK_APP_ID') ? ENV['FACEBOOK_APP_ID'] : @program.facebook_app_id
@@ -24,6 +26,8 @@ module FacelauncherInstance
       if params.key? :signed_request
         fb_signed_request = fb_oauth.parse_signed_request(params[:signed_request])
         app_data = fb_signed_request.key?('app_data') ? fb_signed_request['app_data'] : nil
+
+        logger.info "App data: #{app_data}"
 
         # Call an "event" to allow the app to use the FB app data on its own.
         anchor = before_parse_app_data(app_data) if self.respond_to?('before_parse_app_data') && !app_data.nil?
