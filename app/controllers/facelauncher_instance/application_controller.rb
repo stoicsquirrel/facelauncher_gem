@@ -22,8 +22,6 @@ module FacelauncherInstance
     def index_base
       anchor = nil
 
-      puts "index_base"
-
       # Use static values stored in ENV, if they're defined.
       # This is useful for testing.
       facebook_app_id = ENV.key?('FACEBOOK_APP_ID') ? ENV['FACEBOOK_APP_ID'] : @program.facebook_app_id
@@ -32,16 +30,13 @@ module FacelauncherInstance
       fb_oauth = Koala::Facebook::OAuth.new(facebook_app_id, facebook_app_secret)
       if params.key? :signed_request
         fb_signed_request = fb_oauth.parse_signed_request(params[:signed_request])
-        puts "Signed request: #{fb_signed_request}"
         app_data = fb_signed_request.key?('app_data') ? fb_signed_request['app_data'] : nil
 
         # Call an "event" to allow the app to use the FB app data on its own.
         anchor = before_parse_app_data(app_data) if self.respond_to?('before_parse_app_data') && !app_data.nil?
-        puts "Anchor: #{anchor}"
         # If the event callback did not return an anchor (or doesn't exist), then do default
         # parsing for photo or video.
-        unless anchor.nil?
-          puts "Parsing app data in base"
+        if anchor.nil?
           app_data.match(/^(?<type>photo|video)_(?<id>\d+)/) do |match|
             anchor = "#{match[:type]}s/#{match[:id]}"
           end
