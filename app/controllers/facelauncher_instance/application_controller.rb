@@ -38,7 +38,7 @@ module FacelauncherInstance
         # parsing for photo or video.
         if anchor.nil?
           app_data.match(/^(?<type>photo|video)_(?<id>\d+)/) do |match|
-            anchor = "#{match[:type]}s/#{match[:id]}"
+            anchor = "#{match[:type]}/#{match[:id]}"
           end
         end
       end
