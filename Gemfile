@@ -12,9 +12,7 @@ gem "jquery-rails"
 gem "cloudinary"
 gem "koala"
 
-group :development do
-  gem "pry"
-end
+gem "pry"
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

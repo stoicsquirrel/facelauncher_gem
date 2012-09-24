@@ -1,1 +1,10 @@
-INDEX
+<%= render 'photos/form' %>
+
+<% @photo_albums[0]["photos"].each do |photo| %>
+  <%= cl_image_tag(photo["file"]["filename"], crop: :fit, :width => 350, :height => 350) %>
+<% end %>
+
+<% @video_playlists[0]["videos"].each do |video| %>
+  <%= video["embed_code"].html_safe %>
+  <%= cl_image_tag(video["screenshot"]["filename"], :width => 200, :height => 175, :crop => :fill) %>
+<% end %>

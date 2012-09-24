@@ -1,0 +1,12 @@
+<section id="upload-image-section">
+<%= form_for :photo, :url => photos_path do |f| %>
+  <%- flash.each do |k, v| %>
+    <div id="<%= k %>"><%= v %></div>
+  <%- end %>
+
+  <%= f.label :file, "Photo file" %>
+  <%= f.file_field :file %><br>
+
+  <%= f.submit %><br>
+<% end %>
+</section>

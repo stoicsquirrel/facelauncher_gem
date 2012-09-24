@@ -1,6 +1,6 @@
 FacelauncherInstance::Engine.routes.draw do
   match 'inactive' => 'application#inactive'
-  resources :photos, :only => :show do
+  resources :photos, :only => [:show, :new, :create] do
     member do
       get 'redirect'
     end
