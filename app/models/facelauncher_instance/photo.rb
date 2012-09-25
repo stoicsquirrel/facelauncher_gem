@@ -37,18 +37,21 @@ module FacelauncherInstance
     end
 
     def self.create(params)
-      Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
-        conn.request :multipart
-        conn.request :url_encoded
-        conn.adapter :net_http
-        conn.basic_auth FacelauncherInstance::Engine.config.program_id, FacelauncherInstance::Engine.config.program_access_key
+      # If there is a file attached, then save it to the server, otherwise, just return.
+      if !params[:file].nil?
+        Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+          conn.request :multipart
+          conn.request :url_encoded
+          conn.adapter :net_http
+          conn.basic_auth FacelauncherInstance::Engine.config.program_id, FacelauncherInstance::Engine.config.program_access_key
 
-        FileUtils.copy(params[:file].path, params[:file].original_filename)
-        payload = { :photo => params }
-        payload[:photo][:file] = Faraday::UploadIO.new(params[:file].original_filename, params[:file].content_type)
+          FileUtils.copy(params[:file].path, params[:file].original_filename)
+          payload = { :photo => params }
+          payload[:photo][:file] = Faraday::UploadIO.new(params[:file].original_filename, params[:file].content_type)
 
-        response = conn.post("/photos.json", payload)
-        return response
+          response = conn.post("/photos.json", payload)
+          return response
+        end
       end
     end
   end
