@@ -49,9 +49,10 @@ module FacelauncherInstance
           conn.basic_auth FacelauncherInstance::Engine.config.program_id, FacelauncherInstance::Engine.config.program_access_key
 
           FileUtils.mkdir_p("#{Rails.root}/tmp/images/uploaded") # Make the temp directory if one doesn't exist
-          FileUtils.copy(params[:file].path, "#{Rails.root}/tmp/images/uploaded/#{params[:file].original_filename}")
+          tmp_filename = "#{Rails.root}/tmp/images/uploaded/#{params[:file].original_filename}"
+          FileUtils.copy(params[:file].path, tmp_filename)
           payload = { :photo => params }
-          payload[:photo][:file] = Faraday::UploadIO.new(params[:file].original_filename, params[:file].content_type)
+          payload[:photo][:file] = Faraday::UploadIO.new(tmp_filename, params[:file].content_type)
 
           response = conn.post("/photos.json", payload)
           if response.status == 200
