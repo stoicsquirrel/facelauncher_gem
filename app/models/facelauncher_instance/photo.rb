@@ -38,7 +38,7 @@ module FacelauncherInstance
 
     def self.create(params)
       # If there is no file attached, then return.
-      if params[:file].nil?
+      if params.nil?
         return false
       # If there is a file of the correct type attached, then save it to the server, otherwise, just return.
       elsif params[:file].content_type =~ /^image\/(jpeg|gif|png)$/
