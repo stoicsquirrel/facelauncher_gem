@@ -36,7 +36,7 @@ module FacelauncherInstance
       respond_to do |format|
         response = Photo.create(params[:photo])
 
-        if response.status == 200
+        if response
           format.html { redirect_to new_photo_path, :notice => 'Your photo was saved successfully.' }
         else
           flash[:alert] = 'Your photo could not be saved at this time.'
