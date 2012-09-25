@@ -40,11 +40,8 @@ module FacelauncherInstance
       # If there is no file attached, then return.
       if params[:file].nil?
         return false
-      # If the file is not a jpeg, gif, or png, then return.
-      elsif params[:file].content_type =~ /^image\/(jpeg|gif|png)$/
-        return false
       # If there is a file of the correct type attached, then save it to the server, otherwise, just return.
-      else
+      elsif params[:file].content_type =~ /^image\/(jpeg|gif|png)$/
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.request :multipart
           conn.request :url_encoded
