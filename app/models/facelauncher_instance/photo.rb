@@ -1,4 +1,4 @@
-require 'httparty'
+require 'faraday_middleware'
 
 module FacelauncherInstance
   class Photo
@@ -21,19 +21,31 @@ module FacelauncherInstance
     def self.all
       Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
         conn.adapter :net_http
-        conn.get("/photos.json")
+        conn.response :json, :content_type => /\bjson$/
+
+        response = conn.get("/photos.json")
+        return response.status == 200 ? response.body : nil
       end
     end
 
     def self.find(id)
       Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
         conn.adapter :net_http
-        conn.get("/photos.json/#{id}.json")
+        conn.response :json, :content_type => /\bjson$/
+
+        response = conn.get("/photos/#{id}.json")
+        return response.status == 200 ? response.body : nil
       end
     end
 
     def self.find_by_photo_album_id(photo_album_id)
-      get("/photos.json", query: { photo_album_id: photo_album_id })
+      Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+        conn.adapter :net_http
+        conn.response :json, :content_type => /\bjson$/
+
+        response = conn.get("/photos.json", { photo_album_id: photo_album_id })
+        return response.status == 200 ? response.body : nil
+      end
     end
 
     def self.create(params)
