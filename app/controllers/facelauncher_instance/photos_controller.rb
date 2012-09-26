@@ -12,11 +12,13 @@ module FacelauncherInstance
       end
     end
 
+    # TODO: Add a check for a program parameter determining if this is a Facebook redirect.
     def redirect
-      respond_to do |format|
-        app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.app_url
-        redirect_path = "#{app_url}&app_data=photo_#{params[:id]}"
+      app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.app_url
+      sep = app_url =~ '?' ? '&' : '?'
+      redirect_path = "#{app_url}#{sep}app_data=photo_#{params[:id]}"
 
+      respond_to do |format|
         format.html do
           if !redirect_path.nil?
             redirect_to(redirect_path) if !redirect_path.nil?
