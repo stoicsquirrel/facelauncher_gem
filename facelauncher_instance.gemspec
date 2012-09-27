@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "faraday", "~> 0.8.4"
   s.add_dependency "faraday_middleware", "~> 0.8.8"
   s.add_dependency "koala", "~> 1.5.0"
+  s.add_dependency "dalli", "~> 2.2.1"
 #  s.add_dependency "carrierwave", "~> 0.6.2"
 #  s.add_dependency "cloudinary", "~> 1.0.35"
   # s.add_dependency "jquery-rails"
