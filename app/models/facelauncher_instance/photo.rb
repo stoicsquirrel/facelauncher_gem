@@ -29,8 +29,8 @@ module FacelauncherInstance
     end
 
     def self.find(id)
-      response_body = {}
       Rails.cache.fetch("/photos/#{id}", :expires_in => 1.hour) do
+        response_body = {}
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
           conn.response :json, :content_type => /\bjson$/
@@ -40,7 +40,6 @@ module FacelauncherInstance
         end
         response_body
       end
-      response_body
     end
 
     def self.find_by_photo_album_id(photo_album_id)
