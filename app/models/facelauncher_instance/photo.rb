@@ -6,7 +6,7 @@ module FacelauncherInstance
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    attr_accessor :program_id, :photo_album_id, :file, :caption
+    attr_accessor :id, :program_id, :photo_album_id, :file, :caption, :username, :tags
 
     def initialize(attributes = {})
       attributes.each do |name, value|
