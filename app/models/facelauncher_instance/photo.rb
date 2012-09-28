@@ -8,7 +8,7 @@ module FacelauncherInstance
 
     attr_accessor :id, :program_id, :photo_album_id, :file, :caption, :username, :tags,
       :from_user_username, :from_user_full_name, :from_user_id, :from_service,
-      :position, :from_twitter_image_service
+      :position, :from_twitter_image_service, :created_at, :updated_at
 
     def initialize(attributes = {})
       attributes.each do |name, value|
