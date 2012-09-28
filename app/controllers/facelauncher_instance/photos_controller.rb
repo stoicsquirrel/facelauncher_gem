@@ -17,6 +17,8 @@ module FacelauncherInstance
       app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.app_url
       sep = !app_url.index('?').nil? ? '&' : '?'
       redirect_path = "#{app_url}#{sep}app_data=photo_#{params[:id]}"
+      # Pass additional query string parameters to the redirect URL.
+      redirect_path += '?' + request.env['QUERY_STRING'] if !request.env['QUERY_STRING'].blank?
 
       respond_to do |format|
         format.html do
