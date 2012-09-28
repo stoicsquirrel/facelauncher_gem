@@ -12,7 +12,11 @@ module FacelauncherInstance
 
     def initialize(attributes = {})
       attributes.each do |name, value|
-        send("#{name}=", value)
+        if name == 'created_at' || name == 'updated_at'
+          send("#{name}=", value.to_time)
+        else
+          send("#{name}=", value)
+        end
       end
     end
 
