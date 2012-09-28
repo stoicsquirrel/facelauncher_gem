@@ -6,7 +6,9 @@ module FacelauncherInstance
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    attr_accessor :id, :program_id, :photo_album_id, :file, :caption, :username, :tags
+    attr_accessor :id, :program_id, :photo_album_id, :file, :caption, :username, :tags,
+      :from_user_username, :from_user_full_name, :from_user_id, :from_service,
+      :position, :from_twitter_image_service
 
     def initialize(attributes = {})
       attributes.each do |name, value|
@@ -30,15 +32,20 @@ module FacelauncherInstance
 
     def self.find(id)
       Rails.cache.fetch("/photos/#{id}", :expires_in => 1.hour) do
-        response_body = {}
+        attributes = {}
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
           conn.response :json, :content_type => /\bjson$/
 
           response = conn.get("/photos/#{id}.json")
-          response_body = response.status == 200 ? response.body.with_indifferent_access : nil
+          attributes = response.status == 200 ? response.body.with_indifferent_access : nil
         end
-        response_body
+
+        if !attributes.nil?
+          return self.new(attributes)
+        else
+          raise ArgumentError, "Couldn't find Photo with id=#{id}"
+        end
       end
     end
 
