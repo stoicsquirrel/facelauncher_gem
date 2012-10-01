@@ -2,6 +2,7 @@ require_dependency "facelauncher_instance/application_controller"
 
 module FacelauncherInstance
   class PhotosController < ApplicationController
+    layout 'application' # Use the application's layout instead of the gem's layout
 
     def show
       respond_to do |format|
