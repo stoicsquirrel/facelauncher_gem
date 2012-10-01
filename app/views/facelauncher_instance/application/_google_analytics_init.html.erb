@@ -2,7 +2,7 @@
 <%- if !@program.nil? and !@program.google_analytics_tracking_code.blank? %>
   <script type="text/javascript">
     var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', @program.google_analytics_tracking_code]);
+    _gaq.push(['_setAccount', <%= @program.google_analytics_tracking_code %>]);
     <%-# The following lines are needed if this page is in a Facebook app. %>
     <%- if !@program.facebook_app_id.blank? && !@program.facebook_app_secret.blank? %>
     _gaq.push(['_addIgnoredRef', 'static.ak.facebook.com']);
