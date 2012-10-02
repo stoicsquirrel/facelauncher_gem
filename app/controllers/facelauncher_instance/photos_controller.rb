@@ -7,7 +7,14 @@ module FacelauncherInstance
     def index
       respond_to do |format|
         format.html do
-          @photos = Photo.all
+          if params.key? :albums
+            @photos = []
+            params[:albums].each do |photo_album_id|
+              @photos += Photo.find_by_photo_album_id(photo_album_id)
+            end
+          else
+            @photos = Photo.all
+          end
         end
       end
     end
@@ -56,6 +63,12 @@ module FacelauncherInstance
           format.html { render :action => :new }
         end
       end
+    end
+
+    protected
+
+    def get_program
+      @program = FacelauncherInstance::Program.find(FacelauncherInstance::Engine.config.program_id)
     end
   end
 end
