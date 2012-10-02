@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "koala", "~> 1.5.0"
   s.add_dependency "dalli", "~> 2.2.1"
 #  s.add_dependency "carrierwave", "~> 0.6.2"
-#  s.add_dependency "cloudinary", "~> 1.0.35"
+  s.add_dependency "cloudinary", "~> 1.0.35"
   # s.add_dependency "jquery-rails"
   # s.add_dependency "uglifier"
   # s.add_development_dependency "minitest-rails"
