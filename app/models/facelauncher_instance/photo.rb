@@ -1,9 +1,10 @@
-require 'faraday_middleware'
+# require 'faraday_middleware'
 
 module FacelauncherInstance
   class Photo
     extend ActiveModel::Naming
     include ActiveModel::Conversion
+    include ActiveModel::Serializers::JSON
     include ActiveModel::Validations
 
     attr_accessor :id, :program_id, :photo_album_id, :file, :caption, :username, :tags,
@@ -11,13 +12,25 @@ module FacelauncherInstance
       :position, :from_twitter_image_service, :created_at, :updated_at
 
     def initialize(attributes = {})
-      attributes.each do |name, value|
-        if name == 'created_at' || name == 'updated_at'
-          send("#{name}=", value.to_time)
-        else
-          send("#{name}=", value)
-        end
+      self.attributes = attributes
+
+      # attributes.each do |name, value|
+      #   if name == 'created_at' || name == 'updated_at'
+      #     send("#{name}=", value.to_time)
+      #   else
+      #     send("#{name}=", value)
+      #   end
+      # end
+    end
+
+    def attributes=(hash)
+      hash.each do |key, value|
+        instance_variable_set("@#{key}", value)
       end
+    end
+
+    def attributes
+      instance_values
     end
 
     def persisted?
@@ -25,41 +38,72 @@ module FacelauncherInstance
     end
 
     def self.all
-      Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
-        conn.adapter :net_http
-        conn.response :json, :content_type => /\bjson$/
+      attributes = Rails.cache.fetch("/photos", :expires_in => cache_expiration) do
+        attributes = {}
+        Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+          conn.adapter :net_http
+          #conn.response :json, :content_type => /\bjson$/
 
-        response = conn.get("/photos.json")
-        return response.status == 200 ? response.body.with_indifferent_access : nil
+          response = conn.get("/photos.json", { program_id: FacelauncherInstance::Engine.config.program_id })
+          attributes = response.status == 200 ? response.body : nil
+        end
+        attributes
+      end
+
+      if !attributes.nil?
+        ActiveSupport.parse_json_times = true
+
+        photos = []
+        attributes_for_all_photos = ActiveSupport::JSON.decode(attributes)
+        attributes_for_all_photos.each do |attributes_for_photo|
+          photos << self.new(attributes_for_photo)
+        end
+        photos
       end
     end
 
     def self.find(id)
-      Rails.cache.fetch("/photos/#{id}", :expires_in => 1.hour) do
-        attributes = {}
+      attributes = Rails.cache.fetch("/photos/#{id}", :expires_in => cache_expiration) do
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
-          conn.response :json, :content_type => /\bjson$/
+          #conn.response :json, :content_type => /\bjson$/
 
           response = conn.get("/photos/#{id}.json")
-          attributes = response.status == 200 ? response.body.with_indifferent_access : nil
+          attributes = response.status == 200 ? response.body : nil
         end
+        attributes
+      end
 
-        if !attributes.nil?
-          return self.new(attributes)
-        else
-          raise ArgumentError, "Couldn't find Photo with id=#{id}"
-        end
+      if !attributes.nil?
+        ActiveSupport.parse_json_times = true
+
+        photo = self.new.from_json(attributes, false)
+      else
+        raise ArgumentError, "Couldn't find Photo with id=#{id}"
       end
     end
 
     def self.find_by_photo_album_id(photo_album_id)
-      Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
-        conn.adapter :net_http
-        conn.response :json, :content_type => /\bjson$/
+      attributes = Rails.cache.fetch("/photo_albums/#{photo_album_id}/photos", :expires_in => cache_expiration) do
+        Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+          conn.adapter :net_http
+          #conn.response :json, :content_type => /\bjson$/
 
-        response = conn.get("/photos.json", { photo_album_id: photo_album_id })
-        return response.status == 200 ? response.body.with_indifferent_access : nil
+          response = conn.get("/photos.json", { photo_album_id: photo_album_id })
+          attributes = response.status == 200 ? response.body : nil
+        end
+        attributes
+      end
+
+      if !attributes.nil?
+        ActiveSupport.parse_json_times = true
+
+        photos = []
+        attributes_for_all_photos = ActiveSupport::JSON.decode(attributes)
+        attributes_for_all_photos.each do |attributes_for_photo|
+          photos << self.new(attributes_for_photo)
+        end
+        photos
       end
     end
 
@@ -89,6 +133,12 @@ module FacelauncherInstance
       end
 
       return false
+    end
+
+    protected
+
+    def self.cache_expiration
+      FacelauncherInstance::Engine.config.respond_to?('cache_expiration') ? FacelauncherInstance::Engine.config.cache_expiration : 30.minutes
     end
   end
 end

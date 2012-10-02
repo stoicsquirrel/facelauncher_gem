@@ -4,6 +4,14 @@ module FacelauncherInstance
   class PhotosController < ApplicationController
     layout 'application' # Use the application's layout instead of the gem's layout
 
+    def index
+      respond_to do |format|
+        format.html do
+          @photos = Photo.all
+        end
+      end
+    end
+
     def show
       respond_to do |format|
         format.html do

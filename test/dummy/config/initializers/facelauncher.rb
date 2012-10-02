@@ -6,4 +6,5 @@ FacelauncherInstance::Engine.configure do
   # have access to the Facelauncher API.
   config.program_id = 1
   config.program_access_key = "8f059923fccb3a15320b4716b92ad09a"
+  config.cache_expiration = 1.hour
 end
