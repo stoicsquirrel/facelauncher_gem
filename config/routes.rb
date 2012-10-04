@@ -5,6 +5,10 @@ FacelauncherInstance::Engine.routes.draw do
       get 'redirect'
     end
   end
-  resources :videos, :only => :show
+  resources :videos, :only => [:index, :show] do
+    member do
+      get 'redirect'
+    end
+  end
   resources :signups, :programs, :photos
 end

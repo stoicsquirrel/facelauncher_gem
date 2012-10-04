@@ -30,14 +30,14 @@ module FacelauncherInstance
 
     # TODO: Add a check for a program parameter determining if this is a Facebook redirect.
     def redirect
-      app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.app_url
-      sep = !app_url.index('?').nil? ? '&' : '?'
-      redirect_path = "#{app_url}#{sep}app_data=photo_#{params[:id]}"
-      # Pass additional query string parameters to the redirect URL.
-      redirect_path += '?' + request.env['QUERY_STRING'] if !request.env['QUERY_STRING'].blank?
-
       respond_to do |format|
         format.html do
+          app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.app_url
+          sep = !app_url.index('?').nil? ? '&' : '?'
+          redirect_path = "#{app_url}#{sep}app_data=photo_#{params[:id]}"
+          # Pass additional query string parameters to the redirect URL.
+          redirect_path += '?' + request.env['QUERY_STRING'] if !request.env['QUERY_STRING'].blank?
+
           if !redirect_path.nil?
             redirect_to(redirect_path) if !redirect_path.nil?
           end
@@ -63,12 +63,6 @@ module FacelauncherInstance
           format.html { render :action => :new }
         end
       end
-    end
-
-    protected
-
-    def get_program
-      @program = FacelauncherInstance::Program.find(FacelauncherInstance::Engine.config.program_id)
     end
   end
 end
