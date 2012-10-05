@@ -5,8 +5,8 @@ module FacelauncherInstance
     include ActiveModel::Serializers::JSON
     include ActiveModel::Validations
 
-    attr_accessor :id, :program_id, :video_playlist_id, :embed_code, :embed_id, :caption,
-      :position, :screenshot, :created_at, :updated_at
+    attr_accessor :id, :program_id, :video_playlist_id, :embed_code, :embed_id, :title, :subtitle,
+      :caption, :position, :screenshot, :created_at, :updated_at
 
     def initialize(attributes = {})
       self.attributes = attributes
