@@ -55,46 +55,46 @@ module FacelauncherInstance
       rescue ActiveResource::ResourceNotFound
         raise ActionController::RoutingError.new('Not Found')
       end
-      if @program.active
-        # Get photo albums with photos.
-        @photo_albums = FacelauncherInstance::PhotoAlbum.all(true)
-
-        # Add the photos and the filenames to the photo_album objects and rename approved_photos
-        # to photos.
-        @photo_albums.each do |photo_album|
-          if !photo_album["approved_photos"].nil?
-            photo_album["photos"] = photo_album.delete("approved_photos")
-            photo_album["photos"].each do |photo|
-              photo["file"]["filename"] = File.basename(photo["file"]["url"])
-            end
-          else
-            photo_album["photos"] = Hash.new
-          end
-        end
-
-        # Get video playlists with videos.
-        @video_playlists = FacelauncherInstance::VideoPlaylist.all(true)
-          # Add the videos and the filenames to the video_playlist objects and rename approved_videos
-          # to videos.
-          @video_playlists.each do |video_playlist|
-          video_playlist["videos"] = !video_playlist["approved_videos"].nil? ? video_playlist.delete("approved_videos") : Hash.new
-          video_playlist["videos"].each do |video|
-            video["screenshot"]["filename"] = !video["screenshot"]["url"].nil? ? File.basename(video["screenshot"]["url"]) : nil
-          end
-        end
-      else
-        # If the program is inactive, then render the application's "inactive" template.
-        # If the application did not define an "inactive" template, then show an HTTP 503 error.
-        begin
-          render :inactive, layout: false unless @program.active
-        rescue ActionView::MissingTemplate
-          render file: 'public/503.html', format: :html, status: '503'
-        end
-      end
-
-      # rescue
-        # render file: 'public/503', format: :html, status: '503'
-      #  raise "error"
+#      if @program.active
+#        # Get photo albums with photos.
+#        @photo_albums = FacelauncherInstance::PhotoAlbum.all(true)
+#
+#        # Add the photos and the filenames to the photo_album objects and rename approved_photos
+#        # to photos.
+#        @photo_albums.each do |photo_album|
+#          if !photo_album["approved_photos"].nil?
+#            photo_album["photos"] = photo_album.delete("approved_photos")
+#            photo_album["photos"].each do |photo|
+#              photo["file"]["filename"] = File.basename(photo["file"]["url"])
+#            end
+#          else
+#            photo_album["photos"] = Hash.new
+#          end
+#        end
+#
+#        # Get video playlists with videos.
+#        @video_playlists = FacelauncherInstance::VideoPlaylist.all(true)
+#          # Add the videos and the filenames to the video_playlist objects and rename approved_videos
+#          # to videos.
+#          @video_playlists.each do |video_playlist|
+#          video_playlist["videos"] = !video_playlist["approved_videos"].nil? ? video_playlist.delete("approved_videos") : Hash.new
+#          video_playlist["videos"].each do |video|
+#            video["screenshot"]["filename"] = !video["screenshot"]["url"].nil? ? File.basename(video["screenshot"]["url"]) : nil
+#          end
+#        end
+#      else
+#        # If the program is inactive, then render the application's "inactive" template.
+#        # If the application did not define an "inactive" template, then show an HTTP 503 error.
+#        begin
+#          render :inactive, layout: false unless @program.active
+#        rescue ActionView::MissingTemplate
+#          render file: 'public/503.html', format: :html, status: '503'
+#        end
+#      end
+#
+#      # rescue
+#        # render file: 'public/503', format: :html, status: '503'
+#      #  raise "error"
     end
   end
 end
