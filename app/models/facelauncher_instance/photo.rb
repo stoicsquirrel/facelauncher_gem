@@ -26,8 +26,10 @@ module FacelauncherInstance
     end
 
     def attributes=(hash = {})
-      hash.each do |key, value|
-        instance_variable_set("@#{key}", value)
+      unless hash.nil?
+        hash.each do |key, value|
+          instance_variable_set("@#{key}", value)
+        end
       end
     end
 
