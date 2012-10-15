@@ -109,14 +109,14 @@ module FacelauncherInstance
       end
     end
 
-    def self.create(params)
+    def self.create(params=nil)
       photo = self.new(params)
       photo.save
 
       return photo
     end
 
-    def self.new(params)
+    def self.new(params=nil)
       if params.nil?
         super
       else
