@@ -125,8 +125,8 @@ module FacelauncherInstance
 
           response = conn.post("/photos.json", { :photo => params })
           binding.pry
-          if response.status == 200
-            return true
+          if response.status != 200
+            # TODO: Add errors
           end
         end
       # If there is a file of the correct type attached, then save it to the server, otherwise, just return.
@@ -144,13 +144,13 @@ module FacelauncherInstance
           payload[:photo][:file] = Faraday::UploadIO.new(tmp_filename, params[:file].content_type)
 
           response = conn.post("/photos.json", payload)
-          if response.status == 200
-            return true
+          if response.status != 200
+            # TODO: Add errors
           end
         end
       end
 
-      return false
+      photo = self.new(params)
     end
 
     protected
