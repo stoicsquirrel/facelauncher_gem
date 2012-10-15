@@ -7,20 +7,22 @@ module FacelauncherInstance
     include ActiveModel::Serializers::JSON
     include ActiveModel::Validations
 
-    attr_accessor :id, :program_id, :photo_album_id, :file, :caption, :username, :tags,
-      :from_user_username, :from_user_full_name, :from_user_id, :from_service,
-      :position, :from_twitter_image_service, :created_at, :updated_at
+    @@attributes = [
+      :id, :program_id, :photo_album_id, :file, :file_url, :caption,
+      :username, :tags, :from_user_username, :from_user_full_name, :from_user_id,
+      :from_service, :position, :from_twitter_image_service, :created_at, :updated_at
+    ]
+    @@attributes.each { |attr| attr_accessor attr }
+
+    attr_accessor :id, :program_id, :photo_album_id, :file, :file_url, :caption,
+      :username, :tags, :from_user_username, :from_user_full_name, :from_user_id,
+      :from_service, :position, :from_twitter_image_service, :created_at, :updated_at
+
+    validates :file_url, :presence => true, :if => "file.nil?"
+    validates :file, :presence => true, :if => "file_url.nil?"
 
     def initialize(attributes = {})
       self.attributes = attributes
-
-      # attributes.each do |name, value|
-      #   if name == 'created_at' || name == 'updated_at'
-      #     send("#{name}=", value.to_time)
-      #   else
-      #     send("#{name}=", value)
-      #   end
-      # end
     end
 
     def attributes=(hash)
@@ -38,7 +40,7 @@ module FacelauncherInstance
     end
 
     def self.all
-      attributes = Rails.cache.fetch("/photos", :expires_in => cache_expiration) do
+      attributes = Rails.cache.fetch("/photos-#{cache_timestamp}", :expires_in => cache_expiration) do
         attributes = {}
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
@@ -63,7 +65,7 @@ module FacelauncherInstance
     end
 
     def self.find(id)
-      attributes = Rails.cache.fetch("/photos/#{id}", :expires_in => cache_expiration) do
+      attributes = Rails.cache.fetch("/photos/#{id}-#{cache_timestamp}", :expires_in => cache_expiration) do
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
           #conn.response :json, :content_type => /\bjson$/
@@ -84,7 +86,7 @@ module FacelauncherInstance
     end
 
     def self.find_by_photo_album_id(photo_album_id)
-      attributes = Rails.cache.fetch("/photo_albums/#{photo_album_id}/photos", :expires_in => cache_expiration) do
+      attributes = Rails.cache.fetch("/photo_albums/#{photo_album_id}/photos-#{cache_timestamp}", :expires_in => cache_expiration) do
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
           #conn.response :json, :content_type => /\bjson$/
@@ -109,10 +111,26 @@ module FacelauncherInstance
 
     def self.create(params)
       # If there is no file attached, then return.
-      if params.nil?
-        return false
+      return false if params.nil?
+
+      # Select only model attributes from params to send as part of our request.
+      params.select!{ |k,v| @@attributes.include?(k) }
+
+      # If there is a file URL included, then send it off to the server for processing.
+      if params.key?(:file_url)
+        Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+          conn.request :url_encoded
+          conn.adapter :net_http
+          conn.basic_auth FacelauncherInstance::Engine.config.program_id, FacelauncherInstance::Engine.config.program_access_key
+
+          response = conn.post("/photos.json", { :photo => params })
+          binding.pry
+          if response.status == 200
+            return true
+          end
+        end
       # If there is a file of the correct type attached, then save it to the server, otherwise, just return.
-      elsif params[:file].content_type =~ /^image\/(jpeg|gif|png)$/
+      elsif params.key?(:file) && params[:file].content_type =~ /^image\/(jpeg|gif|png)$/
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.request :multipart
           conn.request :url_encoded
@@ -139,6 +157,10 @@ module FacelauncherInstance
 
     def self.cache_expiration
       FacelauncherInstance::Engine.config.respond_to?('cache_expiration') ? FacelauncherInstance::Engine.config.cache_expiration : 30.minutes
+    end
+
+    def self.cache_timestamp
+      "12345" # Temporary until programs model is cached.
     end
   end
 end
