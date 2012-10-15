@@ -117,12 +117,15 @@ module FacelauncherInstance
     end
 
     def self.new(params)
-      if params.key?(:photo)
-        # Select only model attributes from params to send as part of our request.
-        params[:photo].select!{ |k,v| @@attributes.include?(k) }
+      if params.nil?
+        super
+      else
+        if params.key?(:photo)
+          # Select only model attributes from params to send as part of our request.
+          params.select!{ |k,v| @@attributes.include?(k) }
+        end
+        super(params)
       end
-
-      super(params)
     end
 
     def save
