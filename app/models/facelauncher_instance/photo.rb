@@ -18,7 +18,7 @@ module FacelauncherInstance
       :username, :tags, :from_user_username, :from_user_full_name, :from_user_id,
       :from_service, :position, :from_twitter_image_service, :created_at, :updated_at
 
-    validates :file_url, :presence => true, :if => "file.nil?"
+    validates :file_url, :presence => :if => "file.nil?"
     validates :file, :presence => true, :if => "file_url.nil?"
 
     def initialize(attributes = {})
@@ -110,9 +110,6 @@ module FacelauncherInstance
     end
 
     def self.create(params)
-      # If there is no file attached, then return.
-      return false if params.nil?
-
       # Select only model attributes from params to send as part of our request.
       params.select!{ |k,v| @@attributes.include?(k) }
 
