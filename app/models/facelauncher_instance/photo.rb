@@ -120,7 +120,8 @@ module FacelauncherInstance
 
     def save
       if self.valid?
-        params = { "photo" => attributes.select { |k,v| @@attributes.include?(k.to_sym) } }
+        params = { :photo => attributes.select { |k,v| @@attributes.include?(k.to_sym) } }
+        params[:photo][:program_id] = FacelauncherInstance::Engine.config.program_id
 
         # If there is a file URL included, then send it off to the server for processing.
         if !self.file_url.nil?
