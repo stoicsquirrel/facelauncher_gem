@@ -128,7 +128,6 @@ module FacelauncherInstance
             conn.request :url_encoded
             conn.adapter :net_http
             conn.basic_auth FacelauncherInstance::Engine.config.program_id, FacelauncherInstance::Engine.config.program_access_key
-            binding.pry
             response = conn.post("/photos.json", params)
 
             if response.status == 200
