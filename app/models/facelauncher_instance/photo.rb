@@ -118,16 +118,6 @@ module FacelauncherInstance
       return photo
     end
 
-    def self.new(params=nil)
-      if params.nil?
-        super
-      else
-        # Select only model attributes from params to send as part of our request.
-        params.select!{ |k,v| @@attributes.include?(k) }
-        super(params)
-      end
-    end
-
     def save
       if self.valid?
         # If there is a file URL included, then send it off to the server for processing.
