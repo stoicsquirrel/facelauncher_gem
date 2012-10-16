@@ -122,10 +122,8 @@ module FacelauncherInstance
       if params.nil?
         super
       else
-        if params.key?(:photo)
-          # Select only model attributes from params to send as part of our request.
-          params.select!{ |k,v| @@attributes.include?(k) }
-        end
+        # Select only model attributes from params to send as part of our request.
+        params.select!{ |k,v| @@attributes.include?(k) }
         super(params)
       end
     end
