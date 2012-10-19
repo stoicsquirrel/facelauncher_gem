@@ -32,14 +32,20 @@ module FacelauncherInstance
     def redirect
       respond_to do |format|
         format.html do
+          # Allow the app URL set in Facelauncher to be overridden using an env variable.
           app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.app_url
-          sep = !app_url.index('?').nil? ? '&' : '?'
-          redirect_path = "#{app_url}#{sep}app_data=photo_#{params[:id]}"
-          # Pass additional query string parameters to the redirect URL.
-          redirect_path += '?' + request.env['QUERY_STRING'] if !request.env['QUERY_STRING'].blank?
 
-          if !redirect_path.nil?
-            redirect_to(redirect_path) if !redirect_path.nil?
+          if app_url =~ /^https?\:\/\/www\.facebook\.com\//
+            sep = !app_url.index('?').nil? ? '&' : '?'
+            redirect_path = "#{app_url}#{sep}app_data=photo_#{params[:id]}"
+            # Pass additional query string parameters to the redirect URL.
+            redirect_path += '?' + request.env['QUERY_STRING'] if !request.env['QUERY_STRING'].blank?
+
+            if !redirect_path.nil?
+              redirect_to(redirect_path) if !redirect_path.nil?
+            end
+          else
+            render 'redirect'
           end
         end
       end
