@@ -28,7 +28,6 @@ module FacelauncherInstance
       end
     end
 
-    # TODO: Add a check for a program parameter determining if this is a Facebook redirect.
     def redirect
       respond_to do |format|
         format.html do

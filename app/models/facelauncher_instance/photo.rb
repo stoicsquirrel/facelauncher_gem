@@ -1,5 +1,3 @@
-# require 'faraday_middleware'
-
 module FacelauncherInstance
   class Photo
     extend ActiveModel::Naming
@@ -38,14 +36,17 @@ module FacelauncherInstance
       false
     end
 
-    def self.all
+    def self.all(limit=nil, offset=nil)
       attributes = Rails.cache.fetch("/photos-#{cache_timestamp}", :expires_in => cache_expiration) do
         attributes = {}
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
-          #conn.response :json, :content_type => /\bjson$/
 
-          response = conn.get("/photos.json", { program_id: FacelauncherInstance::Engine.config.program_id })
+          request_args = { program_id: FacelauncherInstance::Engine.config.program_id }
+          request_args[:limit] = limit unless limit.nil?
+          request_args[:offset] = offset unless offset.nil?
+
+          response = conn.get("/photos.json", request_args)
           attributes = response.status == 200 ? response.body : nil
         end
         attributes
@@ -67,7 +68,6 @@ module FacelauncherInstance
       attributes = Rails.cache.fetch("/photos/#{id}-#{cache_timestamp}", :expires_in => cache_expiration) do
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
-          #conn.response :json, :content_type => /\bjson$/
 
           response = conn.get("/photos/#{id}.json")
           attributes = response.status == 200 ? response.body : nil
@@ -88,7 +88,6 @@ module FacelauncherInstance
       attributes = Rails.cache.fetch("/photo_albums/#{photo_album_id}/photos-#{cache_timestamp}", :expires_in => cache_expiration) do
         Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
           conn.adapter :net_http
-          #conn.response :json, :content_type => /\bjson$/
 
           response = conn.get("/photos.json", { photo_album_id: photo_album_id })
           attributes = response.status == 200 ? response.body : nil
@@ -162,7 +161,7 @@ module FacelauncherInstance
     protected
 
     def self.cache_expiration
-      FacelauncherInstance::Engine.config.respond_to?('cache_expiration') ? FacelauncherInstance::Engine.config.cache_expiration : 30.minutes
+      FacelauncherInstance::Engine.config.respond_to?('cache_expiration') ? FacelauncherInstance::Engine.config.cache_expiration : 5.minutes
     end
 
     def self.cache_timestamp
