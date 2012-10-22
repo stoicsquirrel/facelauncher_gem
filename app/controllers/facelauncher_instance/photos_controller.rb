@@ -44,7 +44,7 @@ module FacelauncherInstance
               redirect_to(redirect_path) if !redirect_path.nil?
             end
           else
-            render 'redirect'
+            render 'redirect', :layout => false
           end
         end
       end
