@@ -9,7 +9,8 @@ module FacelauncherInstance
       :id, :program_id, :photo_album_id, :file, :file_url, :caption,
       :username, :tags, :from_user_username, :from_user_full_name, :from_user_id,
       :from_service, :position, :from_twitter_image_service, :original_photo_id,
-      :created_at, :updated_at
+      :created_at, :updated_at, :additional_info_1, :additional_info_2,
+      :additional_info_3
     ]
     @@attributes.each { |attr| attr_accessor attr }
 
