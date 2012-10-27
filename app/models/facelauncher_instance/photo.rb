@@ -159,7 +159,7 @@ module FacelauncherInstance
       return false
     end
 
-    protected
+    private
 
     def self.cache_expiration
       FacelauncherInstance::Engine.config.respond_to?('cache_expiration') ? FacelauncherInstance::Engine.config.cache_expiration : 5.minutes
