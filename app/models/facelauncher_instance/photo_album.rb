@@ -1,5 +1,5 @@
 module FacelauncherInstance
-  class PhotoAlbum
+  class PhotoAlbum < FacelauncherInstance::Model
     self.attributes = [
       :id, :program_id, :photos_attributes, :name, :sort_photos_by, :created_at, :updated_at
     ]
