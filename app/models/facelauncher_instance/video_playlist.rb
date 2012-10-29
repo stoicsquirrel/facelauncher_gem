@@ -5,7 +5,7 @@ module FacelauncherInstance
     ]
 
     def videos
-      FacelauncherInstance::Photo.find_by_video_playlist_id(self.id)
+      FacelauncherInstance::Video.find_by_video_playlist_id(self.id)
     end
   end
 end
