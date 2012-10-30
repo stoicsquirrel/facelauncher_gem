@@ -11,6 +11,10 @@ module FacelauncherInstance
     validates :file_url, :presence => true, :if => "file.nil?"
     validates :file, :presence => true, :if => "file_url.nil?"
 
+#    def tags
+#      FacelauncherInstance::PhotoTag.find_by_photo_id(self.id)
+#    end
+
     def self.create(params=nil)
       photo = self.new(params)
       photo.save
