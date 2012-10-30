@@ -29,10 +29,10 @@ module FacelauncherInstance
       class_name = self.name.demodulize.underscore.pluralize
       attributes = Rails.cache.fetch("/#{class_name}-#{cache_timestamp}", :expires_in => cache_expiration) do
         attributes = {}
-        Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+        Faraday.new(:url => self.facelauncher_url) do |conn|
           conn.adapter :net_http
 
-          request_args = { program_id: FacelauncherInstance::Engine.config.program_id }
+          request_args = { program_id: self.facelauncher_program_id }
           request_args[:limit] = limit unless limit.nil?
           request_args[:offset] = offset unless offset.nil?
 
@@ -57,7 +57,7 @@ module FacelauncherInstance
     def self.find(id)
       class_name = self.name.demodulize.underscore.pluralize
       attributes = Rails.cache.fetch("/#{class_name}/#{id}-#{cache_timestamp}", :expires_in => cache_expiration) do
-        Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+        Faraday.new(:url => self.facelauncher_url) do |conn|
           conn.adapter :net_http
 
           response = conn.get("/#{class_name}/#{id}.json")
@@ -75,6 +75,18 @@ module FacelauncherInstance
       end
     end
 
+    def self.facelauncher_url
+      ENV.key?('FACELAUNCHER_URL') ? ENV['FACELAUNCHER_URL'] : FacelauncherInstance::Engine.config.server_url
+    end
+
+    def self.facelauncher_program_id
+      ENV.key?('FACELAUNCHER_PROGRAM_ID') ? ENV['FACELAUNCHER_PROGRAM_ID'] : FacelauncherInstance::Engine.config.program_id
+    end
+
+    def self.facelauncher_program_access_key
+      ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : FacelauncherInstance::Engine.config.program_access_key
+    end
+
     protected
 
     def self.attributes=(*attributes)
@@ -85,7 +97,7 @@ module FacelauncherInstance
         self.class.send :define_method, "find_by_#{attribute}" do |value|
           class_name = self.name.demodulize.underscore.pluralize
           attributes = Rails.cache.fetch("/#{class_name}/find_by_#{attribute}/#{value.to_s.underscore}-#{cache_timestamp}", :expires_in => cache_expiration) do
-            Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
+            Faraday.new(:url => self.facelauncher_url) do |conn|
               conn.adapter :net_http
 
               response = conn.get("/#{class_name}.json", { attribute => value })
