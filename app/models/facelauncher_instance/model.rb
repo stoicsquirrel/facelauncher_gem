@@ -84,7 +84,7 @@ module FacelauncherInstance
         
         self.class.send :define_method, "find_by_#{attribute}" do |value|
           class_name = self.name.demodulize.underscore.pluralize
-          attributes = Rails.cache.fetch("/#{class_name}/find_by_#{attribute}/#{value.underscore}-#{cache_timestamp}", :expires_in => cache_expiration) do
+          attributes = Rails.cache.fetch("/#{class_name}/find_by_#{attribute}/#{value.to_s.underscore}-#{cache_timestamp}", :expires_in => cache_expiration) do
             Faraday.new(:url => FacelauncherInstance::Engine.config.server_url) do |conn|
               conn.adapter :net_http
 
