@@ -87,7 +87,7 @@ module FacelauncherInstance
       ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : FacelauncherInstance::Engine.config.program_access_key
     end
 
-    protected
+    #protected
 
     def self.attributes=(*attributes)
       @@attributes = attributes.flatten
@@ -119,6 +119,8 @@ module FacelauncherInstance
         end
       end
     end
+
+    protected
 
     def self.cache_expiration
       FacelauncherInstance::Engine.config.respond_to?('cache_expiration') ? FacelauncherInstance::Engine.config.cache_expiration : 5.minutes
