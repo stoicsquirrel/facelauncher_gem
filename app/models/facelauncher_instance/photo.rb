@@ -52,6 +52,7 @@ module FacelauncherInstance
             tmp_filename = "#{Rails.root}/tmp/images/uploaded/#{attributes["file"].original_filename}"
             FileUtils.copy(attributes["file"].path, tmp_filename)
             params[:photo][:file] = Faraday::UploadIO.new(tmp_filename, attributes["file"].content_type)
+            binding.pry
 
             response = conn.post("/photos.json", params)
             if response.status == 200
