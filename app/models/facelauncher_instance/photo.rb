@@ -25,7 +25,7 @@ module FacelauncherInstance
     def save
       if self.valid?
         params = { :photo => attributes.select { |k,v| @@attributes.include?(k.to_sym) } }
-        params[:photo][:program_id] = FacelauncherInstance::Model.facelauncher_program_id
+        params[:program_id] = FacelauncherInstance::Model.facelauncher_program_id
 
         # If there is a file URL included, then send it off to the server for processing.
         if !self.file_url.nil?
@@ -50,7 +50,7 @@ module FacelauncherInstance
             conn.basic_auth FacelauncherInstance::Model.facelauncher_program_id, FacelauncherInstance::Model.facelauncher_program_access_key
 
             FileUtils.mkdir_p("#{Rails.root}/tmp/images/uploaded") # Make the temp directory if one doesn't exist
-            tmp_filename = "#{Rails.root}/tmp/images/uploaded/#{params[:photo][:file].original_filename}"
+            tmp_filename = "#{Rails.root}/tmp/images/uploaded/#{params[:file].original_filename}"
             # FileUtils.copy(params[:photo][:file].path, tmp_filename)
             # params[:photo][:file] = Faraday::UploadIO.new(tmp_filename, params[:photo][:file].content_type)
 
