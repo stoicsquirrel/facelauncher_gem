@@ -7,9 +7,10 @@ module FacelauncherInstance
     def index
       if params.key?(:albums) || params.key?(:photo_album_id)
         @photos = []
-        params[:albums].each do |photo_album_id|
+        photo_album_id = params.key?(:albums) ? params[:albums] : params[:photo_album_id]
+        #photo_album_ids.each do |photo_album_id|
           @photos += Photo.find_by_photo_album_id(photo_album_id)
-        end
+        #end
       else
         @photos = Photo.all # Facelauncher automatically gives you only items for the assigned program.
       end
@@ -17,11 +18,7 @@ module FacelauncherInstance
       respond_to do |format|
         format.html
         format.json do
-          if self.respond_to?('render_index_as_json')
-            render_index_as_json
-          else
-            render :json, @photos
-          end
+          render :json, @photos
         end
       end
     end
