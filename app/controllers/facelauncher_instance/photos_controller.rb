@@ -5,15 +5,22 @@ module FacelauncherInstance
     layout 'application' # Use the application's layout instead of the gem's layout
 
     def index
+      if params.key? :albums || params.key? :photo_album_id
+        @photos = []
+        params[:albums].each do |photo_album_id|
+          @photos += Photo.find_by_photo_album_id(photo_album_id)
+        end
+      else
+        @photos = Photo.all
+      end
+
       respond_to do |format|
-        format.html do
-          if params.key? :albums
-            @photos = []
-            params[:albums].each do |photo_album_id|
-              @photos += Photo.find_by_photo_album_id(photo_album_id)
-            end
+        format.html
+        format.json do
+          if self.respond_to?('render_index_as_json')
+            render_index_as_json
           else
-            @photos = Photo.all
+            render :json, @photos
           end
         end
       end
