@@ -27,7 +27,7 @@ module FacelauncherInstance
 
     def self.all(limit=nil, offset=nil)
       class_name = self.name.demodulize.underscore.pluralize
-      attributes = Rails.cache.fetch("/#{class_name}-#{cache_timestamp}", :expires_in => cache_expiration) do
+      attributes = Rails.cache.fetch("/#{class_name}?limit=#{limit}&offset=#{offset}-#{cache_timestamp}", :expires_in => cache_expiration) do
         attributes = {}
         Faraday.new(:url => self.facelauncher_url) do |conn|
           conn.adapter :net_http
