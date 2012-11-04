@@ -8,7 +8,7 @@ require "rails/test_unit/railtie"
 require "sprockets/railtie"
 
 Bundler.require
-require "facelauncher_instance"
+require "facelauncher"
 
 module Dummy
   class Application < Rails::Application

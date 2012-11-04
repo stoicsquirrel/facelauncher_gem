@@ -1,4 +1,4 @@
-FacelauncherInstance::Engine.routes.draw do
+Facelauncher::Engine.routes.draw do
   match 'inactive' => 'application#inactive'
   resources :photos, :only => [:index, :show, :new, :create] do
     member do

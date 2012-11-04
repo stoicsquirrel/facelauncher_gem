@@ -1,5 +1,5 @@
 # Be sure to restart your server when you modify this file.
-FacelauncherInstance::Engine.configure do
+Facelauncher::Engine.configure do
   config.server_url = "http://localhost:5000/"
 
   # The program_id and program_access_key fields are required in order to

@@ -1,8 +1,9 @@
-class ApplicationController < FacelauncherInstance::ApplicationController
+class ApplicationController < Facelauncher::ApplicationController
   before_filter :before_index, :only => :index
 
   def before_index
-    @photo = FacelauncherInstance::Photo.new
+    @photo_album = Facelauncher::PhotoAlbum.find(1)
+    @video_playlist = Facelauncher::VideoPlaylist.find(1)
   end
 
   protected

@@ -1,3 +1,3 @@
-class PhotosController < FacelauncherInstance::PhotosController
+class PhotosController < Facelauncher::PhotosController
 
 end
