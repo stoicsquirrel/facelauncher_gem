@@ -90,8 +90,8 @@ module Facelauncher
     #protected
 
     def self.attributes=(*attributes)
-      @@attributes = attributes.flatten
-      @@attributes.each do |attribute|
+      attributes = attributes.flatten
+      attributes.each do |attribute|
         attr_accessor attribute
         
         self.class.send :define_method, "find_by_#{attribute}" do |value|
