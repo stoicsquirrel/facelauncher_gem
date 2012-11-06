@@ -39,7 +39,8 @@ module Facelauncher
             response = conn.post("/photos.json", params)
 
             puts "Response: "
-            puts response
+            puts "  Status: #{response.status}"
+            puts "  Body: #{response.body}"
 
             if response.status == 200
               return true
