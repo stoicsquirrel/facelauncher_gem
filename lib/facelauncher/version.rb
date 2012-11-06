@@ -1,3 +1,3 @@
 module Facelauncher
-  VERSION = "0.10.0.2.renamed"
+  VERSION = "0.10.0.1"
 end
