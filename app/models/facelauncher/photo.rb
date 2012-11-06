@@ -35,10 +35,6 @@ module Facelauncher
             conn.basic_auth Facelauncher::Model.facelauncher_program_id, Facelauncher::Model.facelauncher_program_access_key
             response = conn.post("/photos.json", params)
 
-            puts "Response: "
-            puts "  Status: #{response.status}"
-            puts "  Body: #{response.body}"
-
             if response.status == 200
               return true
               # TODO: Add errors
