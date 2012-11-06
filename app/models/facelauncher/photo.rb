@@ -27,6 +27,8 @@ module Facelauncher
         params = { :photo => attributes.select { |k,v| @@attributes.include?(k.to_sym) && k != 'file' } }
         params[:photo][:program_id] = Facelauncher::Model.facelauncher_program_id
 
+        binding.pry
+
         # If there is a file URL included, then send it off to the server for processing.
         if !self.file_url.nil?
           Faraday.new(:url => Facelauncher::Model.facelauncher_url) do |conn|
@@ -34,6 +36,8 @@ module Facelauncher
             conn.adapter :net_http
             conn.basic_auth Facelauncher::Model.facelauncher_program_id, Facelauncher::Model.facelauncher_program_access_key
             response = conn.post("/photos.json", params)
+
+            binding.pry
 
             if response.status == 200
               return true
