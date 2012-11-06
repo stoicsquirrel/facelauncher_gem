@@ -24,7 +24,14 @@ module Facelauncher
 
     def save
       if self.valid?
+        puts "All attributes: "
+        puts attributes
+        puts "Possible attributes: "
+        puts @@attributes
         params = { :photo => attributes.select { |k,v| @@attributes.include?(k.to_sym) && k != 'file' } }
+        puts "Selected attributes: "
+        puts attributes.select { |k,v| @@attributes.include?(k.to_sym) && k != 'file' }
+
         params[:photo][:program_id] = Facelauncher::Model.facelauncher_program_id
 
         puts "Params: "
