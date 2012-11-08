@@ -85,7 +85,7 @@ module Facelauncher
 
     def self.facelauncher_program_id
       if !defined? @@facelauncher_program_id
-        ENV.key?('FACELAUNCHER_PROGRAM_ID') ? ENV['FACELAUNCHER_PROGRAM_ID'] : Facelauncher::Engine.config.program_id
+        @@facelauncher_program_id = ENV.key?('FACELAUNCHER_PROGRAM_ID') ? ENV['FACELAUNCHER_PROGRAM_ID'] : Facelauncher::Engine.config.program_id
       end
 
       @@facelauncher_program_id
@@ -93,7 +93,7 @@ module Facelauncher
 
     def self.facelauncher_program_access_key
       if !defined? @@facelauncher_program_access_key
-        ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : Facelauncher::Engine.config.program_access_key
+        @@facelauncher_program_access_key = ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : Facelauncher::Engine.config.program_access_key
       end
 
       @@facelauncher_program_access_key
