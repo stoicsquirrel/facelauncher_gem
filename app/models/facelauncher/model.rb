@@ -76,15 +76,27 @@ module Facelauncher
     end
 
     def self.facelauncher_url
-      ENV.key?('FACELAUNCHER_URL') ? ENV['FACELAUNCHER_URL'] : Facelauncher::Engine.config.server_url
+      if @@facelauncher_url.nil?
+        @@facelauncher_url = ENV.key?('FACELAUNCHER_URL') ? ENV['FACELAUNCHER_URL'] : Facelauncher::Engine.config.server_url
+      end
+
+      @@facelauncher_url
     end
 
     def self.facelauncher_program_id
-      ENV.key?('FACELAUNCHER_PROGRAM_ID') ? ENV['FACELAUNCHER_PROGRAM_ID'] : Facelauncher::Engine.config.program_id
+      if @@facelauncher_program_id.nil?
+        ENV.key?('FACELAUNCHER_PROGRAM_ID') ? ENV['FACELAUNCHER_PROGRAM_ID'] : Facelauncher::Engine.config.program_id
+      end
+
+      @@facelauncher_program_id
     end
 
     def self.facelauncher_program_access_key
-      ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : Facelauncher::Engine.config.program_access_key
+      if @@facelauncher_program_access_key.nil?
+        ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : Facelauncher::Engine.config.program_access_key
+      end
+
+      @@facelauncher_program_access_key
     end
 
     #protected
@@ -93,7 +105,7 @@ module Facelauncher
       attributes = attributes.flatten
       attributes.each do |attribute|
         attr_accessor attribute
-        
+
         self.class.send :define_method, "find_by_#{attribute}" do |value|
           class_name = self.name.demodulize.underscore.pluralize
           attributes = Rails.cache.fetch("/#{class_name}/find_by_#{attribute}/#{value.to_s.underscore}-#{cache_timestamp}", :expires_in => cache_expiration) do
@@ -123,11 +135,21 @@ module Facelauncher
     protected
 
     def self.cache_expiration
-      Facelauncher::Engine.config.respond_to?('cache_expiration') ? Facelauncher::Engine.config.cache_expiration : 5.minutes
+      if @@facelauncher_cache_expiration.nil?
+        if ENV.key?('FACELAUNCHER_CACHE_EXPIRATION')
+          @@facelauncher_cache_expiration = ENV['FACELAUNCHER_CACHE_EXPIRATION'].to_i
+        elsif Facelauncher::Engine.config.respond_to?('cache_expiration')
+          @@facelauncher_cache_expiration = Facelauncher::Engine.config.cache_expiration
+        else
+          @@facelauncher_cache_expiration = 5.minutes
+        end
+      end
+
+      @@facelauncher_cache_expiration
     end
 
     def self.cache_timestamp
-      "12345" # Temporary until programs model is cached.
+      "12345" # Temporary until programs model is completed.
     end
   end
 end
