@@ -76,7 +76,7 @@ module Facelauncher
     end
 
     def self.facelauncher_url
-      if @@facelauncher_url.nil?
+      if !defined? @@facelauncher_url
         @@facelauncher_url = ENV.key?('FACELAUNCHER_URL') ? ENV['FACELAUNCHER_URL'] : Facelauncher::Engine.config.server_url
       end
 
@@ -84,7 +84,7 @@ module Facelauncher
     end
 
     def self.facelauncher_program_id
-      if @@facelauncher_program_id.nil?
+      if !defined? @@facelauncher_program_id
         ENV.key?('FACELAUNCHER_PROGRAM_ID') ? ENV['FACELAUNCHER_PROGRAM_ID'] : Facelauncher::Engine.config.program_id
       end
 
@@ -92,7 +92,7 @@ module Facelauncher
     end
 
     def self.facelauncher_program_access_key
-      if @@facelauncher_program_access_key.nil?
+      if !defined? @@facelauncher_program_access_key
         ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : Facelauncher::Engine.config.program_access_key
       end
 
@@ -135,7 +135,7 @@ module Facelauncher
     protected
 
     def self.cache_expiration
-      if @@facelauncher_cache_expiration.nil?
+      if !defined? @@facelauncher_cache_expiration
         if ENV.key?('FACELAUNCHER_CACHE_EXPIRATION')
           @@facelauncher_cache_expiration = ENV['FACELAUNCHER_CACHE_EXPIRATION'].to_i
         elsif Facelauncher::Engine.config.respond_to?('cache_expiration')
