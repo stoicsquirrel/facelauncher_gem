@@ -1,6 +1,6 @@
 <%-# Include this at the top of the body. -%>
-<%- if !@program.nil? and !@program.facebook_app_id.blank? -%>
-  <% facebook_app_id = ENV.key?('FACEBOOK_APP_ID') ? ENV['FACEBOOK_APP_ID'] : @program.facebook_app_id %>
+<%- if !@program.program_app.nil? and !@program.program_app.facebook_app_id.blank? -%>
+  <% facebook_app_id = ENV.key?('FACEBOOK_APP_ID') ? ENV['FACEBOOK_APP_ID'] : @program.program_app.facebook_app_id %>
   <div id="fb-root"></div>
   <script type="text/javascript">
     window.fbAsyncInit = function() {

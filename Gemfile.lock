@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    facelauncher (0.9.3.4)
+    facelauncher (1.0.0.rc1)
       dalli (~> 2.2.1)
       faraday (~> 0.8.4)
       httparty (~> 0.9.0)
@@ -119,7 +119,7 @@ GEM
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.34)
+    tzinfo (0.3.35)
 
 PLATFORMS
   ruby

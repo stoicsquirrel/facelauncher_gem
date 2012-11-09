@@ -5,6 +5,7 @@ Facelauncher::Engine.configure do
   # The program_id and program_access_key fields are required in order to
   # have access to the Facelauncher API.
   config.program_id = 1
-  config.program_access_key = "09dc5a1505d04fddaa6cca8355e118c1"
+  config.program_app_id = 1
+  config.program_access_key = "8f059923fccb3a15320b4716b92ad09a"
   config.cache_expiration = 1.minute
 end

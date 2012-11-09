@@ -55,6 +55,7 @@ module Facelauncher
       rescue ActiveResource::ResourceNotFound
         raise ActionController::RoutingError.new('Not Found')
       end
+
 #      if @program.active
 #        # Get photo albums with photos.
 #        @photo_albums = Facelauncher::PhotoAlbum.all(true)

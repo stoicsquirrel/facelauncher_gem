@@ -10,14 +10,13 @@ Gem::Specification.new do |s|
   s.authors     = ["Alex Melman"]
   s.email       = ["alex.melman@bigfuel.com"]
   s.homepage    = "https://github.com/stoicsquirrel/facelauncher"
-  s.summary     = "The client instance for Facelauncher."
+  s.summary     = "The client gem for Facelauncher."
   s.description = "This gem allows the app to interface with Facelauncher, and provides the app with Facelauncher's built-in functionality."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 3.2.8"
-  s.add_dependency "httparty", "~> 0.9.0"
   s.add_dependency "faraday", "~> 0.8.4"
 #  s.add_dependency "faraday_middleware", "~> 0.8.8"
   s.add_dependency "koala", "~> 1.5.0"

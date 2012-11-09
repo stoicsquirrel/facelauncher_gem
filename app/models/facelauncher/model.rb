@@ -25,12 +25,23 @@ module Facelauncher
       false
     end
 
+    def self.authentication_required_on(*methods)
+      @authentication_required_on = methods.flatten
+    end
+
+    def self.authentication_required_on?(method)
+      !@authentication_required_on.nil? && (@authentication_required_on.include?(method.to_sym) || @authentication_required_on.include?(method.to_s))
+    end
+
     def self.all(limit=nil, offset=nil)
       class_name = self.name.demodulize.underscore.pluralize
       attributes = Rails.cache.fetch("/#{class_name}?limit=#{limit}&offset=#{offset}-#{cache_timestamp}", :expires_in => cache_expiration) do
         attributes = {}
         Faraday.new(:url => self.facelauncher_url) do |conn|
           conn.adapter :net_http
+          if authentication_required_on? :all
+            conn.basic_auth Facelauncher::Model.facelauncher_program_id, Facelauncher::Model.facelauncher_program_access_key
+          end
 
           request_args = { program_id: self.facelauncher_program_id }
           request_args[:limit] = limit unless limit.nil?
@@ -59,6 +70,9 @@ module Facelauncher
       attributes = Rails.cache.fetch("/#{class_name}/#{id}-#{cache_timestamp}", :expires_in => cache_expiration) do
         Faraday.new(:url => self.facelauncher_url) do |conn|
           conn.adapter :net_http
+          if authentication_required_on? :find
+            conn.basic_auth Facelauncher::Model.facelauncher_program_id, Facelauncher::Model.facelauncher_program_access_key
+          end
 
           response = conn.get("/#{class_name}/#{id}.json")
           attributes = response.status == 200 ? response.body : nil
@@ -71,7 +85,7 @@ module Facelauncher
 
         photo = self.new.from_json(attributes, false)
       else
-        raise ArgumentError, "Couldn't find Photo with id=#{id}"
+        raise ArgumentError, "Couldn't find #{self.name.demodulize} with id=#{id}"
       end
     end
 
@@ -99,6 +113,14 @@ module Facelauncher
       @@facelauncher_program_access_key
     end
 
+    def self.facelauncher_app_id
+      if !defined? @@facelauncher_app_id
+        @@facelauncher_app_id = ENV.key?('FACELAUNCHER_APP_ID') ? ENV['FACELAUNCHER_APP_ID'] : Facelauncher::Engine.config.program_app_id
+      end
+
+      @@facelauncher_app_id
+    end
+
     #protected
 
     def self.attributes=(*attributes)
@@ -111,6 +133,9 @@ module Facelauncher
           attributes = Rails.cache.fetch("/#{class_name}/find_by_#{attribute}/#{value.to_s.underscore}-#{cache_timestamp}", :expires_in => cache_expiration) do
             Faraday.new(:url => self.facelauncher_url) do |conn|
               conn.adapter :net_http
+              if authentication_required_on? "find_by_#{attribute}"
+                conn.basic_auth Facelauncher::Model.facelauncher_program_id, Facelauncher::Model.facelauncher_program_access_key
+              end
 
               response = conn.get("/#{class_name}.json", { attribute => value })
               attributes = response.status == 200 ? response.body : nil
@@ -132,21 +157,23 @@ module Facelauncher
       end
     end
 
-    protected
-
-    def self.cache_expiration
-      if !defined? @@facelauncher_cache_expiration
+    def self.cache_expiration(duration=nil)
+      if !duration.nil?
+        @facelauncher_cache_expiration = duration
+      elsif !defined? @facelauncher_cache_expiration
         if ENV.key?('FACELAUNCHER_CACHE_EXPIRATION')
-          @@facelauncher_cache_expiration = ENV['FACELAUNCHER_CACHE_EXPIRATION'].to_i
+          @facelauncher_cache_expiration = ENV['FACELAUNCHER_CACHE_EXPIRATION'].to_i
         elsif Facelauncher::Engine.config.respond_to?('cache_expiration')
-          @@facelauncher_cache_expiration = Facelauncher::Engine.config.cache_expiration
+          @facelauncher_cache_expiration = Facelauncher::Engine.config.cache_expiration
         else
-          @@facelauncher_cache_expiration = 5.minutes
+          @facelauncher_cache_expiration = 5.minutes
         end
       end
 
-      @@facelauncher_cache_expiration
+      @facelauncher_cache_expiration
     end
+
+    protected
 
     def self.cache_timestamp
       "12345" # Temporary until programs model is completed.

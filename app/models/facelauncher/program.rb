@@ -1,8 +1,18 @@
 module Facelauncher
-  class Program < ActiveResource::Base
-    self.site = ENV.key?('FACELAUNCHER_URL') ? ENV['FACELAUNCHER_URL'] : Facelauncher::Engine.config.server_url
-    self.format = :json
-    self.user = ENV.key?('FACELAUNCHER_PROGRAM_ID') ? ENV['FACELAUNCHER_PROGRAM_ID'] : Facelauncher::Engine.config.program_id
-    self.password = ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : Facelauncher::Engine.config.program_access_key
+  class Program < Facelauncher::Model
+    authentication_required_on :find
+    cache_expiration(ENV.key?("FACELAUNCHER_PROGRAM_CACHE_EXPIRATION") ? ENV["FACELAUNCHER_PROGRAM_CACHE_EXPIRATION"] : 1.minute)
+
+    self.attributes = [
+      :id, :active, :app_url, :name, :short_name, :description,
+      :additional_info_1, :additional_info_2, :additional_info_3,
+      :photos_updated_at, :videos_updated_at, :created_at, :updated_at
+    ]
+
+    def program_app(id=nil)
+      id = Facelauncher::Model.facelauncher_app_id if id.nil?
+
+      Facelauncher::ProgramApp.find(id)
+    end
   end
 end
