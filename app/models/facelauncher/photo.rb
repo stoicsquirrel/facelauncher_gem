@@ -23,7 +23,7 @@ module Facelauncher
 
     def save
       if self.valid?
-        params = { :photo => attributes.select { |k,v| self.respond_to?(k) && k != 'file' } }
+        params = { :photo => attributes.select { |k,v| self.respond_to?(k) && k != 'file' && k != 'errors' && k != 'validation_context' } }
         params[:photo][:program_id] = Facelauncher::Model.facelauncher_program_id
 
         # If there is a file URL included, then send it off to the server for processing.
