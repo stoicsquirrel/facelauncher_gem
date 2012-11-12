@@ -2,7 +2,7 @@
 <%- if !@program.program_app.nil? and !@program.program_app.google_analytics_tracking_code.blank? %>
   <script type="text/javascript">
     var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', '<%= @program.google_analytics_tracking_code %>']);
+    _gaq.push(['_setAccount', '<%= @program.program_app.google_analytics_tracking_code %>']);
     <%-# The following lines are needed if this page is in a Facebook iframe app. %>
     <%- if @program.program_app.app_url =~ /https?:\/\/www\.facebook\.com\// %>
     _gaq.push(['_addIgnoredRef', 'static.ak.facebook.com']);
