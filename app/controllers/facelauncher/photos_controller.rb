@@ -37,7 +37,7 @@ module Facelauncher
       respond_to do |format|
         format.html do
           # Allow the app URL set in Facelauncher to be overridden using an env variable.
-          app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.app_url
+          app_url = ENV.key?('APP_URL') ? ENV['APP_URL'] : @program.program_app.app_url
 
           if app_url =~ /^https?\:\/\/www\.facebook\.com\//
             sep = !app_url.index('?').nil? ? '&' : '?'
