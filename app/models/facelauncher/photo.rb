@@ -49,11 +49,11 @@ module Facelauncher
 
             # Uncomment the following three lines and set the first parameter of Faraday::UploadIO.new
             # to tmp_filename if you need the original file name.
-            #FileUtils.mkdir_p("#{Rails.root}/tmp/images/uploaded") # Make the temp directory if one doesn't exist
-            #tmp_filename = "#{Rails.root}/tmp/images/uploaded/#{attributes["file"].original_filename}"
-            #FileUtils.copy(attributes["file"].path, tmp_filename)
+            FileUtils.mkdir_p("#{Rails.root}/tmp/images/uploaded") # Make the temp directory if one doesn't exist
+            tmp_filename = "#{Rails.root}/tmp/images/uploaded/#{attributes["file"].original_filename}"
+            FileUtils.copy(attributes["file"].path, tmp_filename)
 
-            params[:photo][:file] = Faraday::UploadIO.new(attributes["file"].path, attributes["file"].content_type)
+            params[:photo][:file] = Faraday::UploadIO.new(tmp_filename, attributes["file"].content_type)
 
             binding.pry
 
