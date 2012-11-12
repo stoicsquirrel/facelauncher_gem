@@ -24,8 +24,8 @@ module Facelauncher
 
       # Use static values stored in ENV, if they're defined.
       # This is useful for testing.
-      facebook_app_id = ENV.key?('FACEBOOK_APP_ID') ? ENV['FACEBOOK_APP_ID'] : @program.facebook_app_id
-      facebook_app_secret = ENV.key?('FACEBOOK_APP_SECRET') ? ENV['FACEBOOK_APP_SECRET'] : @program.facebook_app_secret
+      facebook_app_id = ENV.key?('FACEBOOK_APP_ID') ? ENV['FACEBOOK_APP_ID'] : @program.program_app.facebook_app_id
+      facebook_app_secret = ENV.key?('FACEBOOK_APP_SECRET') ? ENV['FACEBOOK_APP_SECRET'] : @program.program_app.facebook_app_secret
 
       fb_oauth = Koala::Facebook::OAuth.new(facebook_app_id, facebook_app_secret)
       if params.key? :signed_request
