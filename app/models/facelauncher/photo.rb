@@ -55,6 +55,8 @@ module Facelauncher
 
             params[:photo][:file] = Faraday::UploadIO.new(attributes["file"].path, attributes["file"].content_type)
 
+            binding.pry
+
             response = conn.post("/photos.json", params)
             if response.status == 200
               return true
