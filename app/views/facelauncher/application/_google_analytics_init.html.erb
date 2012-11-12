@@ -1,10 +1,10 @@
 <%-# Include this at the bottom of the head. %>
-<%- if !@program.nil? and !@program.google_analytics_tracking_code.blank? %>
+<%- if !@program.program_app.nil? and !@program.program_app.google_analytics_tracking_code.blank? %>
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', '<%= @program.google_analytics_tracking_code %>']);
-    <%-# The following lines are needed if this page is in a Facebook app. %>
-    <%- if !@program.facebook_app_id.blank? && !@program.facebook_app_secret.blank? %>
+    <%-# The following lines are needed if this page is in a Facebook iframe app. %>
+    <%- if @program.program_app.app_url =~ /https?:\/\/www\.facebook\.com\// %>
     _gaq.push(['_addIgnoredRef', 'static.ak.facebook.com']);
     _gaq.push(['_addIgnoredRef', 's-static.ak.facebook.com']);
     <%- end %>
