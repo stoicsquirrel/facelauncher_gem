@@ -6,7 +6,7 @@ module Facelauncher
       puts "Please answer the following two questions about your app:"
       program_id = ask "What is ID of this program in Facelauncher?" || 0
       program_access_key = ask "What is the access key for this Facelauncher program?" || ''
-      has_cloudinary = ask "Are you using Cloudinary? (Y or N)" : 'Y'
+      has_cloudinary = ask "Are you using Cloudinary? (Y or N)" || 'Y'
       puts "Generating initialization files..."
       initializer "facelauncher.rb" do
 %{# Be sure to restart your server when you modify this file.
