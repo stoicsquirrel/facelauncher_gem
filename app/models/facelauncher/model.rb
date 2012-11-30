@@ -5,18 +5,27 @@ module Facelauncher
     include ActiveModel::Serializers::JSON
     include ActiveModel::Validations
 
+    # Initializes a new object
+    #
+    # @param attributes [Hash] The attributes
     def initialize(attributes = {})
       self.attributes = attributes
     end
 
-    def attributes=(hash = {})
-      unless hash.nil?
-        hash.each do |key, value|
+    # Sets the attributes of an object
+    #
+    # @param attributes [Hash] The attributes
+    def attributes=(attributes = {})
+      unless attributes.nil?
+        attributes.each do |key, value|
           instance_variable_set("@#{key}", value)
         end
       end
     end
 
+    # Gets the attributes of an object
+    #
+    # @return [Hash] The attributes
     def attributes
       instance_values
     end
@@ -33,6 +42,11 @@ module Facelauncher
       !@authentication_required_on.nil? && (@authentication_required_on.include?(method.to_sym) || @authentication_required_on.include?(method.to_s))
     end
 
+    # Select all items from Facelauncher
+    #
+    # @param limit [FixNum] An optional limit to the number of results
+    # @param offset [FixNum] An optional offset to set the item from which to start
+    # @return [Array<Facelauncher::Model>] An array of instances of Facelauncher::Model
     def self.all(limit=nil, offset=nil)
       class_name = self.name.demodulize.underscore.pluralize
       attributes = Rails.cache.fetch("/#{class_name}?limit=#{limit}&offset=#{offset}-#{cache_timestamp}", :expires_in => cache_expiration) do
@@ -65,6 +79,10 @@ module Facelauncher
       end
     end
 
+    # Retrieve one item from Facelauncher selected by ID.
+    #
+    # @param id [String, FixNum] The ID of the item to select
+    # @return [Facelauncher::Model] An instance of Facelauncher::Model
     def self.find(id)
       class_name = self.name.demodulize.underscore.pluralize
       attributes = Rails.cache.fetch("/#{class_name}/#{id}-#{cache_timestamp}", :expires_in => cache_expiration) do
@@ -123,6 +141,9 @@ module Facelauncher
 
     #protected
 
+    # Sets the possible attributes for a subclass of Facelauncher::Model.
+    #
+    # @param attributes [Array]
     def self.attributes=(*attributes)
       attributes = attributes.flatten
       attributes.each do |attribute|
