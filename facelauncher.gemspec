@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "The client gem for Facelauncher."
   s.description = "This gem allows the app to interface with Facelauncher, and provides the app with Facelauncher's built-in functionality."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 3.2.8"
