@@ -48,6 +48,27 @@ module Facelauncher
       return anchor
     end
 
+    def clear_cache
+      respond_to do |format|
+        format.json do
+          if Facelauncher::Model.facelauncher_program_id.to_s == params[:program_id] && Facelauncher::Model.facelauncher_program_access_key == params[:key]
+            Rails.cache.clear
+            render :json => {success: true}
+          else
+            render :json => {success: false}
+          end
+        end
+      end
+    end
+
+    def self.facelauncher_program_access_key
+      if !defined? @@facelauncher_program_access_key
+        @@facelauncher_program_access_key = ENV.key?('FACELAUNCHER_PROGRAM_ACCESS_KEY') ? ENV['FACELAUNCHER_PROGRAM_ACCESS_KEY'] : Facelauncher::Engine.config.program_access_key
+      end
+
+      @@facelauncher_program_access_key
+    end
+
     private
     def get_program
       begin
