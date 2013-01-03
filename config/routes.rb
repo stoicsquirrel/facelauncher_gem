@@ -1,6 +1,6 @@
 Facelauncher::Engine.routes.draw do
   match 'inactive' => 'application#inactive'
-  match 'clear-cache' => 'application#clear_cache', :as => 'clear_cache'
+  match 'clear-cache' => 'application#clear_cache', :as => 'clear_cache', :via => :post
   resources :photos, :only => [:index, :show, :new, :create] do
     member do
       get 'redirect'

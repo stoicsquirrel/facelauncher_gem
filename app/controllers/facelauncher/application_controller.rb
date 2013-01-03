@@ -1,7 +1,7 @@
 module Facelauncher
   class ApplicationController < ActionController::Base
-    protect_from_forgery :except => :index
-    before_filter :get_program
+    protect_from_forgery :except => [:index, :clear_cache]
+    before_filter :get_program, :except => :clear_cache
 
     def index
       respond_to do |format|
@@ -49,15 +49,11 @@ module Facelauncher
     end
 
     def clear_cache
-      respond_to do |format|
-        format.json do
-          if Facelauncher::Model.facelauncher_program_id.to_s == params[:program_id] && Facelauncher::Model.facelauncher_program_access_key == params[:key]
-            Rails.cache.clear
-            render :json => {success: true}
-          else
-            render :json => {success: false}
-          end
-        end
+      if Facelauncher::Model.facelauncher_program_id.to_s == params[:program_id] && Facelauncher::Model.facelauncher_program_access_key == params[:key]
+        Rails.cache.clear
+        render :json => {success: true}
+      else
+        render :json => {success: false}
       end
     end
 
